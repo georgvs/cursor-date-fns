@@ -60,6 +60,12 @@ describe("isBusinessDay", () => {
     expect(isWeekend(saturday)).toBe(true);
   });
 
+  it("returns false for a weekday leap day holiday", () => {
+    const leapDay = new Date(2016, 1 /* Feb */, 29);
+    expect(isBusinessDay(leapDay)).toBe(true);
+    expect(isBusinessDay(leapDay, { holidays: [leapDay] })).toBe(false);
+  });
+
   describe("context", () => {
     it("allows to specify the context", () => {
       expect(

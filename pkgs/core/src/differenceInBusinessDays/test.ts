@@ -240,6 +240,15 @@ describe("differenceInBusinessDays", () => {
       expect(isNaN(result)).toBe(true);
     });
 
+    it("excludes a weekday leap day holiday across a month boundary", () => {
+      const result = differenceInBusinessDays(
+        new Date(2016, 2 /* Mar */, 1),
+        new Date(2016, 1 /* Feb */, 26),
+        { holidays: [new Date(2016, 1 /* Feb */, 29)] },
+      );
+      expect(result).toBe(1);
+    });
+
     it("uses the context when matching holidays", () => {
       expect(
         differenceInBusinessDays(

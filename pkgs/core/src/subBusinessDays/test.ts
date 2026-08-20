@@ -107,6 +107,13 @@ describe("subBusinessDays", () => {
       expect(result).toEqual(christmas);
     });
 
+    it("skips a weekday leap day holiday across a month boundary", () => {
+      const result = subBusinessDays(new Date(2016, 2 /* Mar */, 1), 1, {
+        holidays: [new Date(2016, 1 /* Feb */, 29)],
+      });
+      expect(result).toEqual(new Date(2016, 1 /* Feb */, 26));
+    });
+
     it("returns `Invalid Date` if the given date is invalid", () => {
       const result = subBusinessDays(new Date(NaN), 1, {
         holidays: [christmas],

@@ -83,6 +83,27 @@ describe("isHoliday", () => {
     expect(isSunday(saturday)).toBe(false);
   });
 
+  it("matches a leap day holiday", () => {
+    const leapDay = new Date(2016, 1 /* Feb */, 29);
+    expect(isHoliday(leapDay, { holidays: [leapDay] })).toBe(true);
+    expect(
+      isHoliday(new Date(2016, 1 /* Feb */, 28), { holidays: [leapDay] }),
+    ).toBe(false);
+    expect(
+      isHoliday(new Date(2016, 2 /* Mar */, 1), { holidays: [leapDay] }),
+    ).toBe(false);
+  });
+
+  it("treats a Saturday leap day as a holiday without changing weekend helpers", () => {
+    const leapSaturday = new Date(2020, 1 /* Feb */, 29);
+    const holidays = [leapSaturday];
+
+    expect(isHoliday(leapSaturday, { holidays })).toBe(true);
+    expect(isSaturday(leapSaturday)).toBe(true);
+    expect(isWeekend(leapSaturday)).toBe(true);
+    expect(isSunday(leapSaturday)).toBe(false);
+  });
+
   describe("context", () => {
     it("allows to specify the context", () => {
       expect(

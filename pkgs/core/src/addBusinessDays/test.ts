@@ -209,5 +209,12 @@ describe("addBusinessDays", () => {
         }).toISOString(),
       ).toBe("2020-12-28T10:00:00.000-05:00");
     });
+
+    it("skips a weekday leap day holiday across a month boundary", () => {
+      const result = addBusinessDays(new Date(2016, 1 /* Feb */, 26), 1, {
+        holidays: [new Date(2016, 1 /* Feb */, 29)],
+      });
+      expect(result).toEqual(new Date(2016, 2 /* Mar */, 1));
+    });
   });
 });
