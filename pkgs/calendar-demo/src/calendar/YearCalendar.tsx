@@ -7,6 +7,9 @@ interface YearCalendarProps {
   holidayDates: Date[];
   holidaysByDate: Map<string, PublicHoliday[]>;
   resetKey: string;
+  selectedKey: string | null;
+  projectedKeys: Set<string>;
+  onSelectDay: (day: Date) => void;
 }
 
 export function YearCalendar({
@@ -14,6 +17,9 @@ export function YearCalendar({
   holidayDates,
   holidaysByDate,
   resetKey,
+  selectedKey,
+  projectedKeys,
+  onSelectDay,
 }: YearCalendarProps) {
   const months = eachMonthOfInterval({
     start: startOfYear(new Date(year, 0, 1)),
@@ -28,6 +34,9 @@ export function YearCalendar({
           month={month}
           holidayDates={holidayDates}
           holidaysByDate={holidaysByDate}
+          selectedKey={selectedKey}
+          projectedKeys={projectedKeys}
+          onSelectDay={onSelectDay}
         />
       ))}
     </div>

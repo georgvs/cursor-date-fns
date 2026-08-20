@@ -16,12 +16,18 @@ interface MonthGridProps {
   month: Date;
   holidayDates: Date[];
   holidaysByDate: Map<string, PublicHoliday[]>;
+  selectedKey: string | null;
+  projectedKeys: Set<string>;
+  onSelectDay: (day: Date) => void;
 }
 
 export function MonthGrid({
   month,
   holidayDates,
   holidaysByDate,
+  selectedKey,
+  projectedKeys,
+  onSelectDay,
 }: MonthGridProps) {
   const monthStart = startOfMonth(month);
   const days = eachDayOfInterval({
@@ -43,26 +49,40 @@ export function MonthGrid({
           const onDay = holidaysByDate.get(key) ?? [];
           const status = getDayStatus(day, holidayDates, onDay);
           const outside = !isSameMonth(day, monthStart);
+          const selected = selectedKey === key;
+          const projected = projectedKeys.has(key);
           const className = [
             "day",
             outside ? "day-outside" : "",
             status.kind === "holiday" ? "day-holiday" : "",
             status.kind === "weekend" ? "day-weekend" : "",
+            selected ? "day-selected" : "",
+            projected ? "day-projected" : "",
           ]
             .filter(Boolean)
             .join(" ");
-          const title =
+          const titleParts = [
             status.holidayNames.length > 0
               ? status.holidayNames.join(", ")
-              : undefined;
+              : null,
+            selected ? "Selected start" : null,
+            projected ? "Counted working day" : null,
+          ].filter(Boolean);
 
           return (
-            <div key={key} className={className} title={title}>
+            <button
+              type="button"
+              key={key}
+              className={className}
+              title={titleParts.join(" · ") || undefined}
+              disabled={outside}
+              onClick={() => onSelectDay(day)}
+            >
               <span className="day-number">{format(day, "d")}</span>
               {!outside && status.holidayNames[0] ? (
                 <span className="day-name">{status.holidayNames[0]}</span>
               ) : null}
-            </div>
+            </button>
           );
         })}
       </div>

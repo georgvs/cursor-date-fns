@@ -99,7 +99,13 @@ a:hover {
   color: var(--muted);
 }
 
-.field select {
+.field-narrow {
+  min-width: 140px;
+  flex: 0 0 160px;
+}
+
+.field select,
+.field input[type="number"] {
   appearance: none;
   background: var(--canvas-soft);
   border: 1px solid var(--hairline);
@@ -109,8 +115,13 @@ a:hover {
   transition: border-color 160ms ease;
 }
 
-.field select:focus {
+.field select:focus,
+.field input[type="number"]:focus {
   border-color: var(--ink);
+}
+
+.field input[type="number"] {
+  width: 100%;
 }
 
 .legend {
@@ -145,10 +156,32 @@ a:hover {
   border-color: color-mix(in srgb, var(--accent) 35%, var(--hairline));
 }
 
+.swatch-selected {
+  background: var(--ink);
+}
+
+.swatch-projected {
+  background: color-mix(in srgb, var(--ink) 18%, var(--surface));
+  border-color: var(--ink);
+}
+
 .status {
-  margin: 0 0 20px;
+  margin: 0 0 12px;
   color: var(--body);
   font-size: 14px;
+}
+
+.status strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.projection-hint {
+  color: var(--muted);
+}
+
+.projection-status {
+  margin-bottom: 20px;
 }
 
 .status-error {
@@ -216,10 +249,22 @@ a:hover {
 }
 
 .day {
+  display: block;
+  width: 100%;
   min-height: 52px;
   padding: 4px;
+  border: none;
   border-radius: 6px;
-  transition: background-color 140ms ease;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.day:disabled {
+  cursor: default;
 }
 
 .day-outside {
@@ -237,12 +282,37 @@ a:hover {
   box-shadow: inset 2px 0 0 var(--accent);
 }
 
-.day:not(.day-outside):hover {
+.day-projected:not(.day-holiday) {
+  background: color-mix(in srgb, var(--ink) 12%, var(--surface));
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.day-projected.day-holiday {
+  box-shadow:
+    inset 2px 0 0 var(--accent),
+    inset 0 0 0 1px var(--ink);
+}
+
+.day-selected {
+  background: var(--ink) !important;
+  color: var(--canvas) !important;
+  box-shadow: none !important;
+}
+
+.day-selected .day-name {
+  color: var(--canvas);
+}
+
+.day:not(.day-outside):not(:disabled):hover {
   background: color-mix(in srgb, var(--ink) 4%, var(--surface));
 }
 
-.day-holiday:not(.day-outside):hover {
+.day-holiday:not(.day-outside):not(.day-selected):hover {
   background: color-mix(in srgb, var(--accent) 20%, var(--surface));
+}
+
+.day-selected:hover {
+  background: var(--ink) !important;
 }
 
 .day-number {
