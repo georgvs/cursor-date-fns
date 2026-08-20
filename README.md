@@ -64,6 +64,16 @@ npm install date-fns --save
 [See date-fns.org](https://date-fns.org/) for more details, API,
 and other docs.
 
+## Repository Remotes (Playground Setup)
+
+This repository is a clean-start playground with:
+
+- `origin` -> `https://github.com/georgvs/cursor-date-fns.git` (writable)
+- `upstream` -> `https://github.com/date-fns/date-fns.git` (fetch-only)
+
+The old fork `https://github.com/georgvs/date-fns` is intentionally out of scope for agent workflows.
+Use `./scripts/setup-remotes.sh` to restore the expected remotes in fresh environments.
+
 ## License
 
 [MIT © Sasha Koss](https://kossnocorp.mit-license.org/)
