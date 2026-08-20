@@ -15,7 +15,7 @@ Packages:
 
 ## I18n
 
-When working with locales, see the contributing instructions `core/docs/i18nContributionGuide.md`.
+When working with locales, see the contributing instructions `pkgs/core/docs/i18nContributionGuide.md`.
 
 Often I18n PR authors forget to update the locale snapshots; do it by running `mise //pkgs/core:gen/locales/snapshots`.
 
