@@ -16,7 +16,9 @@ export function HolidayList({ countryCode, year, holidays }: HolidayListProps) {
         <code>{countryCode}</code> · {year} · {holidays.length} listed
       </p>
       {holidays.length === 0 ? (
-        <p className="holiday-empty">No holidays returned for this selection.</p>
+        <p className="holiday-empty">
+          No holidays returned for this selection.
+        </p>
       ) : (
         <ul className="holiday-list">
           {holidays.map((holiday) => (
@@ -24,7 +26,9 @@ export function HolidayList({ countryCode, year, holidays }: HolidayListProps) {
               <span className="holiday-date">
                 {format(parseISO(holiday.date), "MMM d")}
               </span>
-              <span className="holiday-name">{holidayDisplayName(holiday)}</span>
+              <span className="holiday-name">
+                {holidayDisplayName(holiday)}
+              </span>
             </li>
           ))}
         </ul>

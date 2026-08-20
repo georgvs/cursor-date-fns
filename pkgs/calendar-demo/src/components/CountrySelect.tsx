@@ -22,9 +22,7 @@ export function CountrySelect({
         disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
       >
-        {countries.length === 0 ? (
-          <option value={value}>{value}</option>
-        ) : null}
+        {countries.length === 0 ? <option value={value}>{value}</option> : null}
         {countries.map((country) => (
           <option key={country.countryCode} value={country.countryCode}>
             {country.countryCode} — {country.name}

@@ -20,10 +20,7 @@ export function getDayStatus(
 ): DayStatus {
   const holidayNames = holidaysOnDay.map(holidayDisplayName);
 
-  if (
-    isHoliday(date, { holidays: holidayDates }) ||
-    holidaysOnDay.length > 0
-  ) {
+  if (isHoliday(date, { holidays: holidayDates }) || holidaysOnDay.length > 0) {
     return { kind: "holiday", holidayNames };
   }
 
