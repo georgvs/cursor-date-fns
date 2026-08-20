@@ -133,12 +133,14 @@
     "./intlFormatDistance": "./src/intlFormatDistance/index.ts",
     "./isAfter": "./src/isAfter/index.ts",
     "./isBefore": "./src/isBefore/index.ts",
+    "./isBusinessDay": "./src/isBusinessDay/index.ts",
     "./isDate": "./src/isDate/index.ts",
     "./isEqual": "./src/isEqual/index.ts",
     "./isExists": "./src/isExists/index.ts",
     "./isFirstDayOfMonth": "./src/isFirstDayOfMonth/index.ts",
     "./isFriday": "./src/isFriday/index.ts",
     "./isFuture": "./src/isFuture/index.ts",
+    "./isHoliday": "./src/isHoliday/index.ts",
     "./isLastDayOfMonth": "./src/isLastDayOfMonth/index.ts",
     "./isLeapYear": "./src/isLeapYear/index.ts",
     "./isMatch": "./src/isMatch/index.ts",
@@ -455,6 +457,8 @@
     "./fp/intlFormatDistanceWithOptions": "./fp/src/intlFormatDistanceWithOptions/index.ts",
     "./fp/isAfter": "./fp/src/isAfter/index.ts",
     "./fp/isBefore": "./fp/src/isBefore/index.ts",
+    "./fp/isBusinessDay": "./fp/src/isBusinessDay/index.ts",
+    "./fp/isBusinessDayWithOptions": "./fp/src/isBusinessDayWithOptions/index.ts",
     "./fp/isDate": "./fp/src/isDate/index.ts",
     "./fp/isEqual": "./fp/src/isEqual/index.ts",
     "./fp/isExists": "./fp/src/isExists/index.ts",
@@ -462,6 +466,8 @@
     "./fp/isFirstDayOfMonthWithOptions": "./fp/src/isFirstDayOfMonthWithOptions/index.ts",
     "./fp/isFriday": "./fp/src/isFriday/index.ts",
     "./fp/isFridayWithOptions": "./fp/src/isFridayWithOptions/index.ts",
+    "./fp/isHoliday": "./fp/src/isHoliday/index.ts",
+    "./fp/isHolidayWithOptions": "./fp/src/isHolidayWithOptions/index.ts",
     "./fp/isLastDayOfMonth": "./fp/src/isLastDayOfMonth/index.ts",
     "./fp/isLastDayOfMonthWithOptions": "./fp/src/isLastDayOfMonthWithOptions/index.ts",
     "./fp/isLeapYear": "./fp/src/isLeapYear/index.ts",
@@ -1903,6 +1909,16 @@
           "default": "./isBefore.js"
         }
       },
+      "./isBusinessDay": {
+        "require": {
+          "types": "./isBusinessDay.d.cts",
+          "default": "./isBusinessDay.cjs"
+        },
+        "import": {
+          "types": "./isBusinessDay.d.ts",
+          "default": "./isBusinessDay.js"
+        }
+      },
       "./isDate": {
         "require": {
           "types": "./isDate.d.cts",
@@ -1961,6 +1977,16 @@
         "import": {
           "types": "./isFuture.d.ts",
           "default": "./isFuture.js"
+        }
+      },
+      "./isHoliday": {
+        "require": {
+          "types": "./isHoliday.d.cts",
+          "default": "./isHoliday.cjs"
+        },
+        "import": {
+          "types": "./isHoliday.d.ts",
+          "default": "./isHoliday.js"
         }
       },
       "./isLastDayOfMonth": {
@@ -5123,6 +5149,26 @@
           "default": "./fp/isBefore.js"
         }
       },
+      "./fp/isBusinessDay": {
+        "require": {
+          "types": "./fp/isBusinessDay.d.cts",
+          "default": "./fp/isBusinessDay.cjs"
+        },
+        "import": {
+          "types": "./fp/isBusinessDay.d.ts",
+          "default": "./fp/isBusinessDay.js"
+        }
+      },
+      "./fp/isBusinessDayWithOptions": {
+        "require": {
+          "types": "./fp/isBusinessDayWithOptions.d.cts",
+          "default": "./fp/isBusinessDayWithOptions.cjs"
+        },
+        "import": {
+          "types": "./fp/isBusinessDayWithOptions.d.ts",
+          "default": "./fp/isBusinessDayWithOptions.js"
+        }
+      },
       "./fp/isDate": {
         "require": {
           "types": "./fp/isDate.d.cts",
@@ -5191,6 +5237,26 @@
         "import": {
           "types": "./fp/isFridayWithOptions.d.ts",
           "default": "./fp/isFridayWithOptions.js"
+        }
+      },
+      "./fp/isHoliday": {
+        "require": {
+          "types": "./fp/isHoliday.d.cts",
+          "default": "./fp/isHoliday.cjs"
+        },
+        "import": {
+          "types": "./fp/isHoliday.d.ts",
+          "default": "./fp/isHoliday.js"
+        }
+      },
+      "./fp/isHolidayWithOptions": {
+        "require": {
+          "types": "./fp/isHolidayWithOptions.d.cts",
+          "default": "./fp/isHolidayWithOptions.cjs"
+        },
+        "import": {
+          "types": "./fp/isHolidayWithOptions.d.ts",
+          "default": "./fp/isHolidayWithOptions.js"
         }
       },
       "./fp/isLastDayOfMonth": {

@@ -1,4 +1,5 @@
 import { TZDate, tz } from "@date-fns/tz";
+import { UTCDate } from "@date-fns/utc";
 import { describe, expect, it } from "vitest";
 import type { ContextOptions, DateArg } from "../types.ts";
 import { differenceInBusinessDays } from "./index.ts";
@@ -171,6 +172,159 @@ describe("differenceInBusinessDays", () => {
     it("returns NaN if the both dates are `Invalid Date`", () => {
       const result = differenceInBusinessDays(new Date(NaN), new Date(NaN));
       expect(isNaN(result)).toBe(true);
+    });
+  });
+
+  describe("holidays", () => {
+    const christmas = new Date(2020, 11 /* Dec */, 25);
+
+    it("excludes a weekday holiday from the count", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(2020, 11 /* Dec */, 24),
+        { holidays: [christmas] },
+      );
+      expect(result).toBe(1);
+    });
+
+    it("excludes a weekday holiday across a full week", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(2020, 11 /* Dec */, 21),
+        { holidays: [christmas] },
+      );
+      expect(result).toBe(4);
+    });
+
+    it("does not extra-exclude a weekend holiday", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(2020, 11 /* Dec */, 24),
+        { holidays: [new Date(2020, 11 /* Dec */, 26)] },
+      );
+      expect(result).toBe(2);
+    });
+
+    it("returns a negative number when the later date is earlier", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 24),
+        new Date(2020, 11 /* Dec */, 28),
+        { holidays: [christmas] },
+      );
+      expect(result).toBe(-1);
+    });
+
+    it("treats an empty holidays list like no holidays", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(2020, 11 /* Dec */, 24),
+        { holidays: [] },
+      );
+      expect(result).toBe(2);
+    });
+
+    it("returns NaN if the first date is `Invalid Date`", () => {
+      const result = differenceInBusinessDays(
+        new Date(NaN),
+        new Date(2020, 11 /* Dec */, 24),
+        { holidays: [christmas] },
+      );
+      expect(isNaN(result)).toBe(true);
+    });
+
+    it("returns NaN if the second date is `Invalid Date`", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(NaN),
+        { holidays: [christmas] },
+      );
+      expect(isNaN(result)).toBe(true);
+    });
+
+    it("excludes a weekday leap day holiday across a month boundary", () => {
+      const result = differenceInBusinessDays(
+        new Date(2016, 2 /* Mar */, 1),
+        new Date(2016, 1 /* Feb */, 26),
+        { holidays: [new Date(2016, 1 /* Feb */, 29)] },
+      );
+      expect(result).toBe(1);
+    });
+
+    it("uses the context when matching holidays", () => {
+      expect(
+        differenceInBusinessDays(
+          "2020-12-28T15:00:00Z",
+          "2020-12-24T15:00:00Z",
+          {
+            holidays: ["2020-12-25T10:00:00Z"],
+            in: tz("America/New_York"),
+          },
+        ),
+      ).toBe(1);
+    });
+
+    it("excludes a TZDate weekday holiday without options.in", () => {
+      const laterDate = new TZDate(
+        2024,
+        11 /* Dec */,
+        24,
+        "Pacific/Kiritimati",
+      );
+      const earlierDate = new TZDate(
+        2024,
+        11 /* Dec */,
+        19,
+        "Pacific/Kiritimati",
+      );
+      const monday = new TZDate(2024, 11 /* Dec */, 23, "Pacific/Kiritimati");
+      expect(
+        differenceInBusinessDays(laterDate, earlierDate, {
+          holidays: [monday],
+        }),
+      ).toBe(2);
+    });
+
+    it("does not extra-exclude a TZDate weekend holiday without options.in", () => {
+      const laterDate = new TZDate(
+        2024,
+        11 /* Dec */,
+        24,
+        "Pacific/Kiritimati",
+      );
+      const earlierDate = new TZDate(
+        2024,
+        11 /* Dec */,
+        19,
+        "Pacific/Kiritimati",
+      );
+      const saturday = new TZDate(2024, 11 /* Dec */, 21, "Pacific/Kiritimati");
+      expect(
+        differenceInBusinessDays(laterDate, earlierDate, {
+          holidays: [saturday],
+        }),
+      ).toBe(3);
+    });
+
+    it("excludes a UTCDate weekday holiday without options.in", () => {
+      const laterDate = new UTCDate(Date.UTC(2024, 11 /* Dec */, 24));
+      const earlierDate = new UTCDate(Date.UTC(2024, 11 /* Dec */, 19));
+      const monday = new UTCDate(Date.UTC(2024, 11 /* Dec */, 23));
+      expect(
+        differenceInBusinessDays(laterDate, earlierDate, {
+          holidays: [monday],
+        }),
+      ).toBe(2);
+    });
+
+    it("does not extra-exclude a UTCDate weekend holiday without options.in", () => {
+      const laterDate = new UTCDate(Date.UTC(2024, 11 /* Dec */, 24));
+      const earlierDate = new UTCDate(Date.UTC(2024, 11 /* Dec */, 19));
+      const saturday = new UTCDate(Date.UTC(2024, 11 /* Dec */, 21));
+      expect(
+        differenceInBusinessDays(laterDate, earlierDate, {
+          holidays: [saturday],
+        }),
+      ).toBe(3);
     });
   });
 });

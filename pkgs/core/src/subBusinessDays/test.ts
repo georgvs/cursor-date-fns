@@ -89,4 +89,43 @@ describe("subBusinessDays", () => {
       assertType<assertType.Equal<TZDate, typeof result>>(true);
     });
   });
+
+  describe("holidays", () => {
+    const christmas = new Date(2020, 11 /* Dec */, 25);
+
+    it("skips a weekday holiday", () => {
+      const result = subBusinessDays(new Date(2020, 11 /* Dec */, 28), 1, {
+        holidays: [christmas],
+      });
+      expect(result).toEqual(new Date(2020, 11 /* Dec */, 24));
+    });
+
+    it("does not extra-skip a weekend holiday", () => {
+      const result = subBusinessDays(new Date(2020, 11 /* Dec */, 28), 1, {
+        holidays: [new Date(2020, 11 /* Dec */, 26)],
+      });
+      expect(result).toEqual(christmas);
+    });
+
+    it("skips a weekday leap day holiday across a month boundary", () => {
+      const result = subBusinessDays(new Date(2016, 2 /* Mar */, 1), 1, {
+        holidays: [new Date(2016, 1 /* Feb */, 29)],
+      });
+      expect(result).toEqual(new Date(2016, 1 /* Feb */, 26));
+    });
+
+    it("returns `Invalid Date` if the given date is invalid", () => {
+      const result = subBusinessDays(new Date(NaN), 1, {
+        holidays: [christmas],
+      });
+      expect(result instanceof Date && isNaN(result.getTime())).toBe(true);
+    });
+
+    it("returns `Invalid Date` if the given amount is NaN", () => {
+      const result = subBusinessDays(new Date(2020, 11 /* Dec */, 28), NaN, {
+        holidays: [christmas],
+      });
+      expect(result instanceof Date && isNaN(result.getTime())).toBe(true);
+    });
+  });
 });

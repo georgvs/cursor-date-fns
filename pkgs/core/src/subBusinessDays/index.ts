@@ -1,12 +1,11 @@
 import { addBusinessDays } from "../addBusinessDays/index.ts";
-import type { ContextOptions, DateArg } from "../types.ts";
+import type { ContextOptions, DateArg, HolidaysOptions } from "../types.ts";
 
 /**
  * The {@link subBusinessDays} function options.
  */
-export interface SubBusinessDaysOptions<
-  DateType extends Date = Date,
-> extends ContextOptions<DateType> {}
+export interface SubBusinessDaysOptions<DateType extends Date = Date>
+  extends ContextOptions<DateType>, HolidaysOptions {}
 
 /**
  * @name subBusinessDays
@@ -15,6 +14,7 @@ export interface SubBusinessDaysOptions<
  *
  * @description
  * Subtract the specified number of business days (mon - fri) from the given date, ignoring weekends.
+ * Pass `holidays` to also skip those calendar days when they fall on a weekday.
  *
  * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
  * @typeParam ResultDate - The result `Date` type, it is the type returned from the context function if it is passed, or inferred from the arguments.
@@ -29,6 +29,13 @@ export interface SubBusinessDaysOptions<
  * // Subtract 10 business days from 1 September 2014:
  * const result = subBusinessDays(new Date(2014, 8, 1), 10)
  * //=> Mon Aug 18 2014 00:00:00 (skipped weekend days)
+ *
+ * @example
+ * // Subtract 1 business day from 28 December 2020, skipping Christmas:
+ * const result = subBusinessDays(new Date(2020, 11, 28), 1, {
+ *   holidays: [new Date(2020, 11, 25)],
+ * })
+ * //=> Thu Dec 24 2020 00:00:00
  */
 export function subBusinessDays<
   DateType extends Date,
