@@ -6,12 +6,14 @@ interface YearCalendarProps {
   year: number;
   holidayDates: Date[];
   holidaysByDate: Map<string, PublicHoliday[]>;
+  resetKey: string;
 }
 
 export function YearCalendar({
   year,
   holidayDates,
   holidaysByDate,
+  resetKey,
 }: YearCalendarProps) {
   const months = eachMonthOfInterval({
     start: startOfYear(new Date(year, 0, 1)),
@@ -19,10 +21,10 @@ export function YearCalendar({
   });
 
   return (
-    <div className="year-grid" key={year}>
+    <div className="year-grid" key={resetKey}>
       {months.map((month) => (
         <MonthGrid
-          key={month.toISOString()}
+          key={`${resetKey}-${month.getMonth()}`}
           month={month}
           holidayDates={holidayDates}
           holidaysByDate={holidaysByDate}

@@ -65,23 +65,32 @@ export default function App() {
 
   useEffect(() => {
     const controller = new AbortController();
+    let active = true;
     setLoadingHolidays(true);
     setHolidaysError(null);
+    setHolidays([]);
 
     fetchPublicHolidays(year, countryCode, controller.signal)
-      .then((list) => setHolidays(list))
+      .then((list) => {
+        if (!active || controller.signal.aborted) return;
+        setHolidays(list);
+      })
       .catch((error: unknown) => {
-        if (controller.signal.aborted) return;
+        if (!active || controller.signal.aborted) return;
         setHolidays([]);
         setHolidaysError(
           error instanceof Error ? error.message : "Failed to load holidays",
         );
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoadingHolidays(false);
+        if (!active || controller.signal.aborted) return;
+        setLoadingHolidays(false);
       });
 
-    return () => controller.abort();
+    return () => {
+      active = false;
+      controller.abort();
+    };
   }, [countryCode, year]);
 
   const holidayDates = useMemo(() => toHolidayDates(holidays), [holidays]);
@@ -138,8 +147,10 @@ export default function App() {
           year={year}
           holidayDates={holidayDates}
           holidaysByDate={byDate}
+          resetKey={`${countryCode}-${year}-${holidays.length}`}
         />
         <HolidayList
+          key={`${countryCode}-${year}`}
           countryCode={countryCode}
           year={year}
           holidays={holidays}

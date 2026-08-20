@@ -20,7 +20,7 @@ export function HolidayList({ countryCode, year, holidays }: HolidayListProps) {
       ) : (
         <ul className="holiday-list">
           {holidays.map((holiday) => (
-            <li key={`${holiday.date}-${holiday.name}`}>
+            <li key={`${countryCode}-${holiday.date}-${holiday.name}`}>
               <span className="holiday-date">
                 {format(parseISO(holiday.date), "MMM d")}
               </span>
