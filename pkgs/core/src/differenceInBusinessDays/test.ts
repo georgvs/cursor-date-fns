@@ -1,4 +1,5 @@
 import { TZDate, tz } from "@date-fns/tz";
+import { UTCDate } from "@date-fns/utc";
 import { describe, expect, it } from "vitest";
 import type { ContextOptions, DateArg } from "../types.ts";
 import { differenceInBusinessDays } from "./index.ts";
@@ -260,6 +261,70 @@ describe("differenceInBusinessDays", () => {
           },
         ),
       ).toBe(1);
+    });
+
+    it("excludes a TZDate weekday holiday without options.in", () => {
+      const laterDate = new TZDate(
+        2024,
+        11 /* Dec */,
+        24,
+        "Pacific/Kiritimati",
+      );
+      const earlierDate = new TZDate(
+        2024,
+        11 /* Dec */,
+        19,
+        "Pacific/Kiritimati",
+      );
+      const monday = new TZDate(2024, 11 /* Dec */, 23, "Pacific/Kiritimati");
+      expect(
+        differenceInBusinessDays(laterDate, earlierDate, {
+          holidays: [monday],
+        }),
+      ).toBe(2);
+    });
+
+    it("does not extra-exclude a TZDate weekend holiday without options.in", () => {
+      const laterDate = new TZDate(
+        2024,
+        11 /* Dec */,
+        24,
+        "Pacific/Kiritimati",
+      );
+      const earlierDate = new TZDate(
+        2024,
+        11 /* Dec */,
+        19,
+        "Pacific/Kiritimati",
+      );
+      const saturday = new TZDate(2024, 11 /* Dec */, 21, "Pacific/Kiritimati");
+      expect(
+        differenceInBusinessDays(laterDate, earlierDate, {
+          holidays: [saturday],
+        }),
+      ).toBe(3);
+    });
+
+    it("excludes a UTCDate weekday holiday without options.in", () => {
+      const laterDate = new UTCDate(Date.UTC(2024, 11 /* Dec */, 24));
+      const earlierDate = new UTCDate(Date.UTC(2024, 11 /* Dec */, 19));
+      const monday = new UTCDate(Date.UTC(2024, 11 /* Dec */, 23));
+      expect(
+        differenceInBusinessDays(laterDate, earlierDate, {
+          holidays: [monday],
+        }),
+      ).toBe(2);
+    });
+
+    it("does not extra-exclude a UTCDate weekend holiday without options.in", () => {
+      const laterDate = new UTCDate(Date.UTC(2024, 11 /* Dec */, 24));
+      const earlierDate = new UTCDate(Date.UTC(2024, 11 /* Dec */, 19));
+      const saturday = new UTCDate(Date.UTC(2024, 11 /* Dec */, 21));
+      expect(
+        differenceInBusinessDays(laterDate, earlierDate, {
+          holidays: [saturday],
+        }),
+      ).toBe(3);
     });
   });
 });

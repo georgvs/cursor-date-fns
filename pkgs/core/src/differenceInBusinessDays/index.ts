@@ -1,6 +1,7 @@
 import { holidaySet } from "../_lib/holidaySet/index.ts";
 import { normalizeDates } from "../_lib/normalizeDates/index.ts";
 import { addDays } from "../addDays/index.ts";
+import { constructFrom } from "../constructFrom/index.ts";
 import { differenceInCalendarDays } from "../differenceInCalendarDays/index.ts";
 import { isSameDay } from "../isSameDay/index.ts";
 import { isValid } from "../isValid/index.ts";
@@ -107,7 +108,7 @@ export function differenceInBusinessDays(
     const laterStart = +startOfDay(laterDate_, options);
     const earlierStart = +startOfDay(earlierDate_, options);
     for (const holiday of holidays) {
-      if (isWeekend(holiday, options)) continue;
+      if (isWeekend(constructFrom(laterDate_, holiday), options)) continue;
       const inRange =
         sign > 0
           ? holiday >= earlierStart && holiday < laterStart
