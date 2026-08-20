@@ -1,0 +1,16 @@
+[tasks.install]
+depends = ["//:source/install"]
+run = "pnpm install --filter @date-fns/calendar-demo..."
+
+[tasks.dev]
+depends = ["install"]
+run = "pnpm exec vite --host 0.0.0.0 --port 5173"
+raw = true
+
+[tasks.build]
+depends = ["install"]
+run = "pnpm exec vite build"
+
+[tasks.test]
+depends = ["install"]
+run = "pnpm exec vitest run"
