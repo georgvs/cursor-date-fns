@@ -1,6 +1,6 @@
 {
   "name": "cursor-date-fns",
-  "install": "mise trust --yes && mise install && mise x -- pnpm install --frozen-lockfile",
+  "install": "bash .cursor/install.sh",
   "terminals": [
     {
       "name": "types",
