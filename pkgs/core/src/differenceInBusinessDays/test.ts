@@ -173,4 +173,84 @@ describe("differenceInBusinessDays", () => {
       expect(isNaN(result)).toBe(true);
     });
   });
+
+  describe("holidays", () => {
+    const christmas = new Date(2020, 11 /* Dec */, 25);
+
+    it("excludes a weekday holiday from the count", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(2020, 11 /* Dec */, 24),
+        { holidays: [christmas] },
+      );
+      expect(result).toBe(1);
+    });
+
+    it("excludes a weekday holiday across a full week", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(2020, 11 /* Dec */, 21),
+        { holidays: [christmas] },
+      );
+      expect(result).toBe(4);
+    });
+
+    it("does not extra-exclude a weekend holiday", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(2020, 11 /* Dec */, 24),
+        { holidays: [new Date(2020, 11 /* Dec */, 26)] },
+      );
+      expect(result).toBe(2);
+    });
+
+    it("returns a negative number when the later date is earlier", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 24),
+        new Date(2020, 11 /* Dec */, 28),
+        { holidays: [christmas] },
+      );
+      expect(result).toBe(-1);
+    });
+
+    it("treats an empty holidays list like no holidays", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(2020, 11 /* Dec */, 24),
+        { holidays: [] },
+      );
+      expect(result).toBe(2);
+    });
+
+    it("returns NaN if the first date is `Invalid Date`", () => {
+      const result = differenceInBusinessDays(
+        new Date(NaN),
+        new Date(2020, 11 /* Dec */, 24),
+        { holidays: [christmas] },
+      );
+      expect(isNaN(result)).toBe(true);
+    });
+
+    it("returns NaN if the second date is `Invalid Date`", () => {
+      const result = differenceInBusinessDays(
+        new Date(2020, 11 /* Dec */, 28),
+        new Date(NaN),
+        { holidays: [christmas] },
+      );
+      expect(isNaN(result)).toBe(true);
+    });
+
+    it("uses the context when matching holidays", () => {
+      expect(
+        differenceInBusinessDays(
+          "2020-12-28T15:00:00Z",
+          "2020-12-24T15:00:00Z",
+          {
+            holidays: ["2020-12-25T10:00:00Z"],
+            in: tz("America/New_York"),
+          },
+        ),
+      ).toBe(1);
+    });
+  });
 });

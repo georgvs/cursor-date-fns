@@ -148,4 +148,66 @@ describe("addBusinessDays", () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe("holidays", () => {
+    const christmas = new Date(2020, 11 /* Dec */, 25);
+
+    it("skips a weekday holiday", () => {
+      const result = addBusinessDays(new Date(2020, 11 /* Dec */, 24), 1, {
+        holidays: [christmas],
+      });
+      expect(result).toEqual(new Date(2020, 11 /* Dec */, 28));
+    });
+
+    it("does not extra-skip a weekend holiday", () => {
+      const result = addBusinessDays(new Date(2020, 11 /* Dec */, 24), 1, {
+        holidays: [new Date(2020, 11 /* Dec */, 26)],
+      });
+      expect(result).toEqual(christmas);
+    });
+
+    it("treats an empty holidays list like no holidays", () => {
+      const result = addBusinessDays(new Date(2020, 11 /* Dec */, 24), 1, {
+        holidays: [],
+      });
+      expect(result).toEqual(christmas);
+    });
+
+    it("does not move when the amount is 0 even if the date is a holiday", () => {
+      const result = addBusinessDays(christmas, 0, {
+        holidays: [christmas],
+      });
+      expect(result).toEqual(christmas);
+    });
+
+    it("returns `Invalid Date` if the given date is invalid", () => {
+      const result = addBusinessDays(new Date(NaN), 1, {
+        holidays: [christmas],
+      });
+      expect(result instanceof Date && isNaN(result.getTime())).toBe(true);
+    });
+
+    it("returns `Invalid Date` if the given amount is NaN", () => {
+      const result = addBusinessDays(new Date(2020, 11 /* Dec */, 24), NaN, {
+        holidays: [christmas],
+      });
+      expect(result instanceof Date && isNaN(result.getTime())).toBe(true);
+    });
+
+    it("ignores invalid holiday entries", () => {
+      const result = addBusinessDays(new Date(2020, 11 /* Dec */, 24), 1, {
+        holidays: [new Date(NaN), christmas],
+      });
+      expect(result).toEqual(new Date(2020, 11 /* Dec */, 28));
+    });
+
+    it("uses the context when matching holidays", () => {
+      expect(
+        addBusinessDays("2020-12-24T15:00:00Z", 1, {
+          holidays: ["2020-12-25T10:00:00Z"],
+          in: tz("America/New_York"),
+        }).toISOString(),
+      ).toBe("2020-12-28T10:00:00.000-05:00");
+    });
+  });
 });

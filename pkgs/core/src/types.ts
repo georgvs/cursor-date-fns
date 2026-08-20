@@ -212,6 +212,14 @@ export interface WeekOptions {
 }
 
 /**
+ * The holidays function options. Used to build function options.
+ */
+export interface HolidaysOptions {
+  /** Calendar days that are not business days, even if they are weekdays. */
+  holidays?: Array<DateArg<Date> & {}>;
+}
+
+/**
  * The first week contains date options. Used to build function options.
  */
 export interface FirstWeekContainsDateOptions {
