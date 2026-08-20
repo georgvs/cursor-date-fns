@@ -22,7 +22,10 @@ mise_bin="$(command -v mise)"
 
 # Expose `mise` on a directory that is always on PATH so the environment's
 # terminal commands (e.g. `mise //:types`) resolve it regardless of shell rc.
-if command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1; then
+# Skip when `mise` already lives there, otherwise `ln` errors that the source
+# and destination are the same file and aborts the rest of install.
+if [ "$mise_bin" != "/usr/local/bin/mise" ] &&
+  command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1; then
   sudo ln -sf "$mise_bin" /usr/local/bin/mise
 fi
 
