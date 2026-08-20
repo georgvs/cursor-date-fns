@@ -1,0 +1,30 @@
+---
+description: Date-domain correctness guardrails for core, tz, and utc package source
+globs: pkgs/core/src/**,pkgs/tz/src/**,pkgs/utc/src/**
+alwaysApply: false
+---
+
+# Date-domain guardrails
+
+Applies when changing source under `pkgs/core`, `pkgs/tz`, or `pkgs/utc`. Style, changelog/version, layout, locales, and FP regen stay in the other `.cursor/rules/` files and `AGENTS.md`.
+
+## Must
+
+- **Input purity:** Never mutate caller-owned date arguments. Clone via `toDate` / `constructFrom` / `normalizeDates` (or the package-equivalent) before any `set*` or in-place work.
+- **Calendar vs duration:** Do not implement day/week/month/year logic as raw `± n * 86400000` (or equivalent). Prefer calendar APIs and existing helpers. When touching day/week boundaries or differences, run `mise //pkgs/core:test/tz`.
+- **Honest tests:** Use hardcoded dates/timestamps (or shared fixtures), not values derived from the code under test. Cover `Invalid Date` / NaN as neighboring tests do. For calendar-unit helpers, add leap-day and month/year-boundary cases when behavior depends on them.
+- **Modularity:** Import via direct `../name/index.ts` (or package subpaths). Never cross-import from package root barrels inside `src`.
+- **Dependencies:** Do not install or suggest new third-party runtime date libraries. Use existing internal helpers and workspace `@date-fns/*` packages.
+- **Types:** No `any` in public exports/signatures. `unknown` is allowed for narrowing / type guards. Do not weaken existing `.tp.ts` or `assertType` coverage.
+
+## Anti-patterns (agent would otherwise)
+
+1. Mutate the argument `Date` with `setDate` / `setHours` instead of cloning first.
+2. Implement `addDays` / week helpers as `timestamp + n * 86400000` (breaks across DST).
+3. Compute calendar-day differences with raw ms division and skip offset / `startOfDay` normalization.
+4. Write expected values by calling the same function (or a sibling just written) instead of hardcoded dates.
+5. Ship calendar-unit changes with happy-path only—no `Invalid Date`, no leap day / month-end when those matter.
+6. `import { … }` from `../index.ts` or a package root barrel inside `src`.
+7. Add `moment` / `luxon` / `dayjs` / external `date-fns-tz` instead of existing helpers / `@date-fns/tz`.
+8. Widen public signatures with `any`, or drop / skip `.tp.ts` / `assertType` coverage.
+9. Treat `TZDate` like a plain `Date` and use system-local getters/setters without the tz extension path.
