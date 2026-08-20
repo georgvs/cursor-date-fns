@@ -1,0 +1,30 @@
+---
+description: Locale contribution standards from the i18n contribution guide
+globs: pkgs/core/src/locale/**
+alwaysApply: false
+---
+
+# Locale contributions
+
+Authoritative guide: `pkgs/core/docs/i18nContributionGuide.md`. Prefer neighboring TypeScript locales as the live code pattern when the guide’s samples disagree.
+
+## Adding or changing a locale
+
+- Copy an existing locale (e.g. `en-US`) and replace values using [CLDR](https://www.unicode.org/cldr/) as the reference.
+- Required pieces: `formatDistance`, `formatLong`, `formatRelative`, `localize`, `match`, and `options` (`weekStartsOn`, `firstWeekContainsDate`).
+- Directory naming: usually `xx-YY`. Use the language-only code when language and country codes match, the language is used in only one country, or regional standards are shared across countries that use the language.
+- Same-language locales: reuse `_lib` from the parent locale; override regional differences (often `formatLong` and `options`).
+- Match patterns should be case-insensitive and cover diacritics / grammatical cases as needed; ordinals should match with and without suffixes.
+
+## Snapshots
+
+Always regenerate and verify:
+
+```sh
+mise //pkgs/core:gen/locales/snapshots
+mise //pkgs/core:test/locales
+```
+
+## Docs lag (unclear / outdated)
+
+The i18n guide still shows older JS/`default` export examples. Follow current TypeScript named exports in sibling locales (e.g. `export const enUS`). Do not invent a hybrid style.

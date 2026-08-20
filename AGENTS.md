@@ -1,5 +1,7 @@
 # AI Agents Instructions
 
+Contribution standards for Cursor (style, tests, docs, changelog/version, package layout) live in `.cursor/rules/`. This file stays focused on agent workflow and preferred commands.
+
 Packages:
 
 - `pkgs/core`: The core `date-fns` package.

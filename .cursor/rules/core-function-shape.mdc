@@ -1,0 +1,30 @@
+---
+description: Shape and docs conventions for core date-fns functions
+globs: pkgs/core/src/**/index.ts,pkgs/core/src/**/test.ts
+alwaysApply: false
+---
+
+# Core function shape
+
+Applies when adding or changing functions under `pkgs/core/src/`.
+
+## Layout
+
+- One directory per function: `pkgs/core/src/<camelCaseName>/`.
+- Implement in `index.ts` with a **named export** matching the directory name.
+- Co-locate unit tests in `test.ts`.
+- Do not use directory names that collide with reserved areas (`locale`, `fp`, `constants`, `tp`, or `_`-prefixed / dotted names used by tooling).
+
+## Documentation
+
+Use TSDoc on the public export, including at least:
+
+- `@name`, `@category`, `@summary`, `@description`, `@example`
+
+Pick `@category` from the list in `pkgs/core/docs/config.js` (e.g. Day Helpers, Common Helpers).
+
+## Generated surfaces
+
+Build scripts regenerate package exports, root indexes, and FP wrappers. Do not hand-edit generated FP files or casually rewrite package export maps—follow existing build/contribution flow.
+
+When touching FP behavior, see `pkgs/core/docs/fp.md` (curried functions, reversed argument order, `WithOptions` variants).

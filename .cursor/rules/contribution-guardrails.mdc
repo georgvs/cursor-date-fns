@@ -1,0 +1,32 @@
+---
+description: Contribution guardrails for any change (CONTRIBUTING.md, reconciled with monorepo tooling)
+alwaysApply: true
+---
+
+# Contribution guardrails
+
+Apply these standards to every change. Human policy source: `CONTRIBUTING.md`. Prefer `AGENTS.md` and current `mise`/CI tasks when CONTRIBUTING commands or paths are stale.
+
+## Non-negotiables
+
+- **Style:** Format and lint with oxfmt/oxlint via `mise //:format` and `mise //:lint`. Do not follow CONTRIBUTING’s Prettier/ESLint wording; the repo no longer uses those tools.
+- **Tests:** Add or update tests for behavior changes. Prefer co-located `test.ts` under `pkgs/*/src/...`.
+- **Docs:** Document public APIs with TSDoc (`@name`, `@category`, `@summary`, `@description`, `@example`). Categories are defined in `pkgs/core/docs/config.js`.
+- **Changelog:** Do not edit `CHANGELOG.md` (or package changelogs). Maintainers generate release notes.
+- **Version:** Do not bump package versions. Releases are maintainer-owned (`pkgs/core/docs/release.md`).
+- **Layout:** Work under `pkgs/<package>/`. Do not invent a repo-root `src/`.
+- **Modularity:** Avoid new functions that duplicate existing date-fns APIs or native APIs. Avoid significant public-API or bundle growth; prefer another package when appropriate.
+
+## Preferred validation
+
+- Types: `mise //:types`
+- Lint: `mise //:lint`
+- Unit: `mise //pkgs/core:test/unit`
+- Time zones (date/tz changes): `mise //pkgs/core:test/tz`
+- Locales: `mise //pkgs/core:test/locales`
+
+## Unclear policy — ask a human; do not invent rules
+
+- **“Significant build size increase”** — CONTRIBUTING gives no threshold or measurement method. Flag size concerns for human judgment.
+- **“Move to a new or another package”** — when to reject vs relocate is judgment-based. Do not create packaging without asking.
+- **Stale CONTRIBUTING examples** — REPL `require('./src/toDate').default`, root `./scripts/build/package.sh`, and root `src/` paths are outdated for this monorepo. Treat them as non-authoritative.
